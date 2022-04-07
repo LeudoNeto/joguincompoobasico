@@ -4,7 +4,7 @@ class Game:
         self.y = y
 
     def direita(self):
-        if (self.x+1,self.y) in [(b1.x,b1.y),(b2.x,b2.y),(b3.x,b3.y),(b4.x,b4.y),(b5.x,b5.y),(b6.x,b6.y),(b7.x,b7.y),(b8.x,b8.y)]:
+        if (self.x+1,self.y) in Bloco.coordenadas:
             evento('Você não pode ir para onde tem um bloco')
             return
         if self.x+1 > 4:
@@ -14,7 +14,7 @@ class Game:
         evento('Você foi para a direita')
 
     def esquerda(self):
-        if (self.x-1,self.y) in [(b1.x,b1.y),(b2.x,b2.y),(b3.x,b3.y),(b4.x,b4.y),(b5.x,b5.y),(b6.x,b6.y),(b7.x,b7.y),(b8.x,b8.y)]:
+        if (self.x-1,self.y) in Bloco.coordenadas:
             evento('Você não pode ir para onde tem um bloco')
             return
         if self.x-1 < 0:
@@ -23,25 +23,25 @@ class Game:
         self.x -= 1
         evento('Você foi para a esquerda')
 
-    def cima(self):
-        if (self.x,self.y-1) in [(b1.x,b1.y),(b2.x,b2.y),(b3.x,b3.y),(b4.x,b4.y),(b5.x,b5.y),(b6.x,b6.y),(b7.x,b7.y),(b8.x,b8.y)]:
+    def baixo(self):
+        if (self.x,self.y-1) in Bloco.coordenadas:
             evento('Você não pode ir para onde tem um bloco')
             return
         if self.y-1 < 0:
             evento('Você não pode sair do mapa')
             return
         self.y -= 1
-        evento('Você foi para cima')
+        evento('Você foi para baixo')
     
-    def baixo(self):
-        if (self.x,self.y+1) in [(b1.x,b1.y),(b2.x,b2.y),(b3.x,b3.y),(b4.x,b4.y),(b5.x,b5.y),(b6.x,b6.y),(b7.x,b7.y),(b8.x,b8.y)]:
+    def cima(self):
+        if (self.x,self.y+1) in Bloco.coordenadas:
             evento('Você não pode ir para onde tem um bloco')
             return
         if self.y+1 < 0:
             evento('Você não pode sair do mapa')
             return
         self.y += 1
-        evento('Você foi para baixo')
+        evento('Você foi para cima')
 
 class Destino:
     def __init__(self,x=4,y=0):
@@ -49,9 +49,11 @@ class Destino:
         self.y = y
 
 class Bloco:
+    coordenadas = []
     def __init__(self,x,y):
         self.x = x
         self.y = y
+        Bloco.coordenadas.append((self.x,self.y))
     
 
 def evento(txt):
@@ -76,7 +78,7 @@ d = Destino(4,4)
 while True:
     for y in range(4,-1,-1):
         for x in range(0,5):
-            if (x,y) not in [(b1.x,b1.y),(b2.x,b2.y),(b3.x,b3.y),(b4.x,b4.y),(b5.x,b5.y),(b6.x,b6.y),(b7.x,b7.y),(b8.x,b8.y),(d.x,d.y),(player.x,player.y)]:
+            if (x,y) not in [(d.x,d.y),(player.x,player.y)] and (x,y) not in Bloco.coordenadas:
                 print('   ',end = '')
             elif (x,y) == (player.x,player.y) and (player.x,player.y) != (d.x,d.y):
                 print(f'{"😳":^2}',end = '')
@@ -106,8 +108,8 @@ while True:
     if n == 'd':
         player.direita()
     if n == 's':
-        player.cima()
+        player.baixo()
     if n == 'a':
         player.esquerda()
     if n == 'w':
-        player.baixo()
+        player.cima()
